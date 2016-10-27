@@ -24,6 +24,12 @@
 #include "device1/CameraHardwareInterface.h"
 #include "CameraService.h"
 
+#ifdef MTK_HARDWARE //PATCH
+//Add MTK header
+#include <camera/MtkCamera.h>
+#include <camera/MtkCameraParameters.h>
+#endif
+
 namespace android {
 
 #define LOG1(...) ALOGD_IF(gLogLevel >= 1, __VA_ARGS__);
