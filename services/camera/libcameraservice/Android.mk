@@ -76,6 +76,10 @@ LOCAL_C_INCLUDES += \
     frameworks/native/include/media/openmax \
     external/jpeg
 
+ifeq ($(MTK_HARDWARE),true)
+    LOCAL_SRC_FILES += mediatek/CameraService.cpp
+    LOCAL_SRC_FILES += mediatek/api1/CameraClient.cpp
+endif
 
 LOCAL_CFLAGS += -Wall -Wextra
 
