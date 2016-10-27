@@ -92,6 +92,13 @@ public:
 
     // Implementation of BinderService<T>
     static char const* getServiceName() { return "media.camera"; }
+    
+#ifdef MTK_HARDWARE //PATCH
+#if 1   // defined(MTK_CAMERA_BSP_SUPPORT)
+    virtual status_t    getProperty(String8 const& key, String8& value) const;
+    virtual status_t    setProperty(String8 const& key, String8 const& value);
+#endif
+#endif
 
                         CameraService();
     virtual             ~CameraService();
