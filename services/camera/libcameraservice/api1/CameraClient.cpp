@@ -97,6 +97,10 @@ status_t CameraClient::initialize(CameraModule *module) {
     // Enable zoom, error, focus, and metadata messages by default
     enableMsgType(CAMERA_MSG_ERROR | CAMERA_MSG_ZOOM | CAMERA_MSG_FOCUS |
                   CAMERA_MSG_PREVIEW_METADATA | CAMERA_MSG_FOCUS_MOVE);
+    
+    #ifdef MTK_HARDWARE //PATCH
+    enableMsgType(MTK_CAMERA_MSG_EXT_NOTIFY | MTK_CAMERA_MSG_EXT_DATA); // Enable MTK-extended messages by default
+    #endif    
 
     LOG1("CameraClient::initialize X (pid %d, id %d)", callingPid, mCameraId);
     return OK;
@@ -734,6 +738,11 @@ void CameraClient::notifyCallback(int32_t msgType, int32_t ext1,
     if (!client->lockIfMessageWanted(msgType)) return;
 
     switch (msgType) {
+        #ifdef MTK_HARDWARE //PATCH
+        case MTK_CAMERA_MSG_EXT_NOTIFY:
+            client->handleMtkExtNotify(ext1, ext2); // Callback extended msg notification.
+            break;
+        #endif
         case CAMERA_MSG_SHUTTER:
             // ext1 is the dimension of the yuv picture.
             client->handleShutter();
@@ -759,6 +768,11 @@ void CameraClient::dataCallback(int32_t msgType,
     }
 
     switch (msgType & ~CAMERA_MSG_PREVIEW_METADATA) {
+        #ifdef MTK_HARDWARE //PATCH
+        case MTK_CAMERA_MSG_EXT_DATA:
+            client->handleMtkExtData(dataPtr, metadata); // Callback extended msg notification.
+            break;
+        #endif
         case CAMERA_MSG_PREVIEW_FRAME:
             client->handlePreviewData(msgType, dataPtr, metadata);
             break;
